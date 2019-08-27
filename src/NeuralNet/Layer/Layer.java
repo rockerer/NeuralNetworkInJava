@@ -1,12 +1,15 @@
-package NeuralNet;
+package NeuralNet.Layer;
 
+import NeuralNet.Activationfunction.Activationfunction;
+import NeuralNet.Neuron.*;
 import java.util.List;
 
-class Layer {
+public class Layer {
     private List<Neuron> Neuronen;
     private double[][] weights;
 
-    Layer() {
+    public Layer(LayerTyp layerTyp, Neuron neuron, int neuronCnt, Activationfunction actFunc) {
+
 
     }
 
@@ -18,7 +21,7 @@ class Layer {
         // Layer between input- and output-Layer. We have no limit on them
         hiddenLayer,
         // Output layer is the last layer in the neural net
-        outputLayer;
+        outputLayer,
     }
 
 }

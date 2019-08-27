@@ -1,4 +1,4 @@
-package NeuralNet;
+package NeuralNet.Neuron;
 
 import java.util.List;
 
@@ -10,16 +10,9 @@ Once every neuron on the input side has fired, the neuron itself starts
 to fire to the next layer, depending on the given values
  */
 public class Neuron {
-    private List<Neuron> inputNeurons;
-    public Neuron() {
-        System.out.println("Empty constructor");
-    }
-    public  Neuron(int a) {
-        System.out.println("Constructor with int");
-    }
+    List<Neuron> inputNeurons;
 
     public void fire(){
-
     }
 }
 
