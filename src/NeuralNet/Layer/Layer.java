@@ -8,7 +8,7 @@ public class Layer {
     private List<Neuron> Neuronen;
     private double[][] weights;
 
-    public Layer(LayerTyp layerTyp, Neuron neuron, int neuronCnt, Activationfunction actFunc) {
+    public <T extends Neuron> Layer(LayerTyp layerTyp, Class<T> neuron, int neuronCnt, Activationfunction actFunc) {
 
 
     }

@@ -2,6 +2,7 @@ package NeuralNet;
 
 import NeuralNet.Activationfunction.*;
 import NeuralNet.Layer.Layer;
+import NeuralNet.Neuron.Neuron;
 import NeuralNet.Neuron.Perceptron;
 
 import java.io.NotActiveException;
@@ -15,16 +16,23 @@ class NeuralNet {
     private boolean hasInputLayer = false, hasOutputLayer = false;
     private int inputNeuronCnt = 0, OutputNeuronCnt = 0;
 
-    NeuralNet(int inpCnt, int outCnt) {
+    public NeuralNet() {
+        System.out.println("Neural Net with 0 input and 0 Outputs created.");
+        // automatic type deduction
+        this.hiddenLayers = new ArrayList<>();
+    }
+
+    public NeuralNet(int inpCnt, int outCnt) {
         System.out.println("Neural net");
-        layers = new ArrayList<Layer>();
+        // automatic type deduction
+        hiddenLayers = new ArrayList<Layer>();
     }
     void setInputLayer(Neuron neuron, Activationfunction actFunc) {
         if(this.hasInputLayer) {
-            layers.set(0, new Layer(Layer.LayerTyp.inputLayer, new Perceptron(), this.inputNeuronCnt, new ActivationfunctionTanh()));
+            inputLayer = new Layer(Layer.LayerTyp.inputLayer, Perceptron.class, this.inputNeuronCnt, new ActivationfunctionTanh()));
             System.out.println("InputLayer replaced");
         } else {
-            inputLayer = new Layer(Layer.LayerTyp.inputLayer, new Perceptron(), this.inputNeuronCnt, new ActivationfunctionTanh());
+            inputLayer = new Layer(Layer.LayerTyp.inputLayer, Perceptron.class, this.inputNeuronCnt, new ActivationfunctionTanh());
             System.out.println("InputLayer created");
         }
         this.hasInputLayer = true;
@@ -36,6 +44,8 @@ class NeuralNet {
     }
 
     void setOutputLayer() {
+        if(this.hasOutputLayer) {
+        }
     }
     void unsetOutputLayer() {
         this.outputLayer = null;
