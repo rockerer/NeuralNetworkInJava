@@ -1,21 +1,28 @@
 package NeuralNet.Neuron;
 
+/*
+ */
+
+/**
+ * This class implements a simple Neuron, based on the function
+ * of a Perceptron
+ * @author Florian Aul
+ */
 public class Perceptron extends Neuron{
+    /**
+     * Voll die tolle Funktion!
+     * @author Florian Aul
+     */
     public Perceptron() {
     }
-    @Override
-    public void setInput(double inp) {
-        this.inp = inp;
-    }
 
+    /**
+    * This function evaluates the Input and does stuff...
+     *
+     * @param inp The input which will be put into the function
+     */
     @Override
-    public void fire() {
-        System.out.println("FIRE!!!");
-    }
-
-    @Override
-    public void fire(double inp) {
-        System.out.println("FIRE with input!!!");
-
+    public void eval(double inp) {
+        this.outp = inp;
     }
 }

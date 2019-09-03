@@ -1,7 +1,10 @@
 package NeuralNet;
 
 import NeuralNet.Activationfunction.*;
-import NeuralNet.Layer.Layer;
+import NeuralNet.Layer.HiddenLayer;
+import NeuralNet.Layer.InputLayer;
+import NeuralNet.Layer.*;
+import NeuralNet.Layer.OutputLayer;
 import NeuralNet.Neuron.Neuron;
 import NeuralNet.Neuron.Perceptron;
 
@@ -12,30 +15,47 @@ import java.util.List;
 class NeuralNet {
     private Layer inputLayer = null;
     private Layer outputLayer = null;
-    private List<NeuralNet.Layer.Layer> hiddenLayers;
+    private List<Layer> hiddenLayers;
     private boolean hasInputLayer = false, hasOutputLayer = false;
-    private int inputNeuronCnt = 0, OutputNeuronCnt = 0;
+    private int inputNeuronCnt = 0, outputNeuronCnt = 0;
 
-    public NeuralNet() {
-        System.out.println("Neural Net with 0 input and 0 Outputs created.");
-        // automatic type deduction
-        this.hiddenLayers = new ArrayList<>();
-    }
+//    NeuralNet() {
+//        System.out.println("Neural Net with 0 input and 0 Outputs created.");
+//        // automatic type deduction
+//        this.hiddenLayers = new ArrayList<>();
+//    }
 
-    public NeuralNet(int inpCnt, int outCnt) {
-        System.out.println("Neural net");
+    NeuralNet(int inpCnt, int outCnt) {
         // automatic type deduction
         hiddenLayers = new ArrayList<Layer>();
+        this.inputNeuronCnt = inpCnt;
+        this.outputNeuronCnt = outCnt;
     }
-    void setInputLayer(Neuron neuron, Activationfunction actFunc) {
+
+    public int getInputNeuronCnt() {
+        return this.inputNeuronCnt;
+    }
+
+    public int getOutputNeuronCnt() {
+        return this.outputNeuronCnt;
+    }
+
+    <T extends Neuron> void setInputLayer(Class<T> neuron, Activationfunction actFunc) {
         if(this.hasInputLayer) {
-            inputLayer = new Layer(Layer.LayerTyp.inputLayer, Perceptron.class, this.inputNeuronCnt, new ActivationfunctionTanh()));
-            System.out.println("InputLayer replaced");
+            this.inputLayer = new InputLayer(neuron,  actFunc, this.inputNeuronCnt);
         } else {
-            inputLayer = new Layer(Layer.LayerTyp.inputLayer, Perceptron.class, this.inputNeuronCnt, new ActivationfunctionTanh());
-            System.out.println("InputLayer created");
+            this.inputLayer = new InputLayer(neuron,  actFunc, this.inputNeuronCnt);
         }
         this.hasInputLayer = true;
+    }
+
+    <T extends Neuron> void setOutputLayer(Class<T> neuron, Activationfunction actFunc) {
+        if(this.hasOutputLayer) {
+            this.outputLayer = new OutputLayer(neuron, actFunc, this.outputNeuronCnt);
+        } else {
+            this.outputLayer = new OutputLayer(neuron, actFunc, this.outputNeuronCnt);
+        }
+        this.hasOutputLayer = true;
     }
 
     void unsetInputLayer() {
@@ -43,45 +63,58 @@ class NeuralNet {
         this.hasInputLayer = false;
     }
 
-    void setOutputLayer() {
-        if(this.hasOutputLayer) {
-        }
-    }
     void unsetOutputLayer() {
         this.outputLayer = null;
         this.hasOutputLayer = false;
     }
-    void addHiddenLayer() {
-        if(layerTyp == Layer.LayerTyp.inputLayer) {
-            // The inputlayer will always be at index = 0
-            // if an input Layer already exists
-        }
-        if(layerTyp == Layer.LayerTyp.hiddenLayer) {
-            if(this.hasOutputLayer) {
-                this.layers.add(this.layers.size() - 1, new Layer());
-                System.out.println("HiddenLayer created in between");
-            } else {
-                layers.add(new Layer());
-                System.out.println("HiddenLayer created");
-            }
-        }
-        if(layerTyp == Layer.LayerTyp.outputLayer) {
-            if(!this.hasOutputLayer) {
-                this.layers.add(new Layer());
-                System.out.println("OutputLayer created");
-            } else {
-                this.layers.set(this.layers.size()-1, new Layer());
-                System.out.println("OutputLayer replaced");
-            }
-            this.hasOutputLayer = true;
-        }
 
+    <T extends Neuron> void addHiddenLayer(Class<T> neuron, Activationfunction actFunc, int neuronCnt, boolean bias) {
+        // TODO finish me
+        int cntLastLayer;
+        if (this.hiddenLayers.size() == 0) {
+            cntLastLayer = this.getInputNeuronCnt();
+        } else {
+            cntLastLayer = this.hiddenLayers.get(this.hiddenLayers.size() - 1).getOutpCnt();
+        }
+        this.hiddenLayers.add(new HiddenLayer(neuron, actFunc, cntLastLayer, neuronCnt, bias));
+        this.outputLayer.setInpCnt(neuronCnt);
     }
 
-    public double[] run() {
-        double[] tmp;
-        return  tmp = new double[] {1.0};
+    // TODO check, if it returns a copy or a reference
+    public Layer getHiddenLayer(int index) {
+        if (index >= this.hiddenLayers.size()) {
+            return null;
+        }
+        return this.hiddenLayers.get(index);
     }
 
+    public void setWeightsHidden(int layer, int startNode, int stopNode, double w) {
+    }
+    public void setWeightsOutp(int startNode, int stopNode, double w) {
+        this.outputLayer.setWeight(startNode, stopNode, w);
+    }
+
+    double[] eval(double[] inp) {
+        // prepare result
+        double[] res = new double[this.outputNeuronCnt];
+        this.inputLayer.eval(inp);
+        for(int i = 0; i<this.hiddenLayers.size(); i++) {
+            this.hiddenLayers.get(i).eval((i == 0?this.inputLayer.getOutp() : this.hiddenLayers.get(i-1).getOutp()));
+        }
+        this.outputLayer.eval(this.hiddenLayers.get(this.hiddenLayers.size()-1).getOutp());
+        res = this.outputLayer.getOutp();
+        return  res;
+    }
+
+    public void printInfo() {
+        System.out.println(
+                "InputLayer: " + (this.hasInputLayer ? "yes: " + this.inputNeuronCnt : "no") + ";\n" +
+                        this.inputLayer.getInpCnt() + "\n" +
+                        "HiddenLayers: " + this.hiddenLayers.size());
+                        this.hiddenLayers.forEach((Layer l) -> {System.out.println(l.getInpCnt() + "->" + l.getOutpCnt());});
+                                System.out.println(
+                        "OutputLayer: " + (this.hasOutputLayer ? "yes: " + this.outputNeuronCnt : "no") + "\n" +
+                                this.outputLayer.getInpCnt() + "->" + this.outputLayer.getOutpCnt());
+    }
 
 }
