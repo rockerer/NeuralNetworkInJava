@@ -1,15 +1,10 @@
 package NeuralNet;
 
 import NeuralNet.Activationfunction.*;
-import NeuralNet.Layer.HiddenLayer;
-import NeuralNet.Layer.InputLayer;
-import NeuralNet.Layer.Layer;
 import NeuralNet.Neuron.Perceptron;
 
-import java.lang.reflect.AnnotatedType;
 
-
-public class NNMain {
+class NNMain {
     public static void main(String[] args) {
         System.out.println("Main started");
         testNN0();

@@ -1,14 +1,9 @@
 package NeuralNet;
 
 import NeuralNet.Activationfunction.*;
-import NeuralNet.Layer.HiddenLayer;
-import NeuralNet.Layer.InputLayer;
 import NeuralNet.Layer.*;
-import NeuralNet.Layer.OutputLayer;
 import NeuralNet.Neuron.Neuron;
-import NeuralNet.Neuron.Perceptron;
 
-import java.io.NotActiveException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +22,12 @@ class NeuralNet {
 
     NeuralNet(int inpCnt, int outCnt) {
         // automatic type deduction
-        hiddenLayers = new ArrayList<Layer>();
+        hiddenLayers = new ArrayList<>();
         this.inputNeuronCnt = inpCnt;
         this.outputNeuronCnt = outCnt;
     }
 
-    public int getInputNeuronCnt() {
+    private int getInputNeuronCnt() {
         return this.inputNeuronCnt;
     }
 
@@ -111,7 +106,7 @@ class NeuralNet {
                 "InputLayer: " + (this.hasInputLayer ? "yes: " + this.inputNeuronCnt : "no") + ";\n" +
                         this.inputLayer.getInpCnt() + "\n" +
                         "HiddenLayers: " + this.hiddenLayers.size());
-                        this.hiddenLayers.forEach((Layer l) -> {System.out.println(l.getInpCnt() + "->" + l.getOutpCnt());});
+                        this.hiddenLayers.forEach((Layer l) -> System.out.println(l.getInpCnt() + "->" + l.getOutpCnt()));
                                 System.out.println(
                         "OutputLayer: " + (this.hasOutputLayer ? "yes: " + this.outputNeuronCnt : "no") + "\n" +
                                 this.outputLayer.getInpCnt() + "->" + this.outputLayer.getOutpCnt());

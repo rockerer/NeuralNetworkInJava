@@ -3,8 +3,6 @@ package NeuralNet.Layer;
 import NeuralNet.Activationfunction.Activationfunction;
 import NeuralNet.Neuron.Neuron;
 
-import java.util.ArrayList;
-
 public class InputLayer extends Layer{
     public <T extends Neuron> InputLayer(Class<T> neuron, Activationfunction actFunc, int cnt) {
         this.inpCnt = cnt;

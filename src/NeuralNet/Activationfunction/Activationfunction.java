@@ -1,6 +1,6 @@
 package NeuralNet.Activationfunction;
 
-public abstract interface Activationfunction {
-    abstract double activate(double inp);
-    abstract double derivative(double inp);
+public interface Activationfunction {
+    double activate(double inp);
+    double derivative(double inp);
 }
