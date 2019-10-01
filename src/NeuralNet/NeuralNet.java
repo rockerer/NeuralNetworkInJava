@@ -117,4 +117,20 @@ class NeuralNet {
                                 this.outputLayer.getInpCnt() + "->" + this.outputLayer.getOutpCnt());
     }
 
+    /**
+     * @param min minimal weight
+     * @param max maximal weight
+     * This function is used to initialize all weights with random weights and works as followed:
+     * for each row r do:
+     *    for each weight w in r do:
+     *       w = rand(min, max)
+     *
+     */
+    public void setRandomWeights(double min, double max) {
+        for (Layer a : this.hiddenLayers) {
+            // TODO finish this implementation
+        }
+
+    }
+
 }

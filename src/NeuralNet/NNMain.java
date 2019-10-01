@@ -32,7 +32,7 @@ public class NNMain {
         n.getHiddenLayer(1).setWeight(1,1,1);
         n.getHiddenLayer(1).setBias(1, 10);
         n.setWeightsOutp(0,0,1);
-        n.setWeightsOutp(1,0,-1);
+        n.setWeightsOutp(1,0,1);
 //        n.printInfo();
         double[] res = n.eval(new double[]{1.0,1.0});
         for (double v : res) {

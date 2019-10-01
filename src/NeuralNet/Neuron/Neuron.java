@@ -1,5 +1,7 @@
 package NeuralNet.Neuron;
 
+import NeuralNet.Activationfunction.Activationfunction;
+
 import java.util.List;
 
 /*
@@ -11,9 +13,10 @@ to fire to the next layer, depending on the given values
  */
 public abstract class Neuron {
     protected double inp = 0, outp = 0;
+    protected Activationfunction actFunc = null;
 
 
-    public abstract void eval(double inp);
+    public abstract double eval(double inp);
     public double getOutp() {
         return this.outp;
     }

@@ -6,13 +6,18 @@ import NeuralNet.Neuron.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Florian Aul
+ * This abstract class defines all methods necessary for implementing the layers
+ *
+ */
 public abstract class Layer {
-    protected List<Neuron> Neuronen;
-    protected int inpCnt, outpCnt;
-    protected double[][] weights;
-    protected double[] outp;
+    private List<Neuron> Neuronen;
+    int inpCnt, outpCnt;
+    double[][] weights;
+    double[] outp;
 
-    protected Layer() {
+    Layer() {
         this.Neuronen = new ArrayList<>();
         this.inpCnt = 0;
         this.outpCnt = 0;
@@ -25,6 +30,9 @@ public abstract class Layer {
         this.outp = new double[outpCnt];
     }
 
+    /**
+     * @return a value
+     */
     public double[] getOutp() {
         return  this.outp;
     }
