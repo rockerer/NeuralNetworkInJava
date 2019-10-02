@@ -16,6 +16,7 @@ public abstract class Layer {
     int inpCnt, outpCnt;
     double[][] weights;
     double[] outp;
+    double[] net;
 
     Layer() {
         this.Neuronen = new ArrayList<>();

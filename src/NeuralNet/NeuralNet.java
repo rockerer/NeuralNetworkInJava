@@ -7,18 +7,21 @@ import NeuralNet.Neuron.Neuron;
 import java.util.ArrayList;
 import java.util.List;
 
-class NeuralNet {
+/**
+ * This neural network consists of Layers, each having a number of Neurons, set at instanciation
+ */
+public class NeuralNet {
     private Layer inputLayer = null;
     private Layer outputLayer = null;
-    private List<Layer> hiddenLayers;
-    private boolean hasInputLayer = false, hasOutputLayer = false;
+    private List<Layer> hiddenLayers = null;
+    private boolean hasInputLayer = false, hasHiddenLayer = false, hasOutputLayer = false;
     private int inputNeuronCnt = 0, outputNeuronCnt = 0;
 
-//    NeuralNet() {
-//        System.out.println("Neural Net with 0 input and 0 Outputs created.");
-//        // automatic type deduction
-//        this.hiddenLayers = new ArrayList<>();
-//    }
+    NeuralNet() {
+        System.out.println("Neural Net with 0 input and 0 Outputs created.");
+        // automatic type deduction
+        this.hiddenLayers = new ArrayList<>();
+    }
 
     NeuralNet(int inpCnt, int outCnt) {
         // automatic type deduction
@@ -35,12 +38,15 @@ class NeuralNet {
         return this.outputNeuronCnt;
     }
 
-    <T extends Neuron> void setInputLayer(Class<T> neuron, Activationfunction actFunc) {
+    <T extends Neuron> void addInputLayer(Activationfunction actFunc, int InputNeuronCnt) {
         if(this.hasInputLayer) {
-            this.inputLayer = new InputLayer(neuron,  actFunc, this.inputNeuronCnt);
+            System.out.println("Replacing existing InputLayer!");
+            this.inputLayer = new InputLayer(actFunc, this.inputNeuronCnt);
         } else {
+            System.out.println("Creating InputLayer!");
             this.inputLayer = new InputLayer(neuron,  actFunc, this.inputNeuronCnt);
         }
+        this.inputNeuronCnt = InputNeuronCnt;
         this.hasInputLayer = true;
     }
 
