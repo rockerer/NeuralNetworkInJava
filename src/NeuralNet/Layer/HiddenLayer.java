@@ -2,37 +2,31 @@ package NeuralNet.Layer;
 
 import NeuralNet.Activationfunction.Activationfunction;
 import NeuralNet.Neuron.Neuron;
-import NeuralNet.Neuron.NeuronFactory;
+import NeuralNet.Error;
 
 // A simple HiddenLayer, nothing fancy like a featuremap
 public class HiddenLayer extends Layer{
-    private boolean bias;
-    private double[] biasVal;
     private Neuron n;
-    public <T extends Neuron> HiddenLayer(Class<T> neuron,Activationfunction actFunc, int inpCnt, int outpCnt, boolean bias) {
-        this.inpCnt = inpCnt;
+    public HiddenLayer(Activationfunction actFunc, int inpCnt, int outpCnt) {
+        // take the bias into account
+        this.inpCnt = inpCnt + 1;
         this.outpCnt = outpCnt;
-        this.bias = bias;
-        this.biasVal = new double[outpCnt];
+        this.net = new double[this.inpCnt];
         this.outp = new double[this.outpCnt];
         this.weights = new double[inpCnt][outpCnt];
-        n = NeuronFactory.createNeuron(neuron, actFunc);
     }
 
 
     @Override
-    public void eval(double[] val) {
+    public void eval() {
         // TODO implement me!
-        // FIXME take care of the bias!
+        // go for every outp and calculate it by Vector-Matrix multiplication
         double tmp;
         for(int i = 0; i < this.outpCnt; i++ ) {
             // collect all inputs
             tmp = 0.0d;
             for(int j = 0; j < this.inpCnt; j++) {
-                tmp += this.weights[j][i] * val[j];
-            }
-            if(bias) {
-                tmp += biasVal[i];
+                tmp += this.weights[j][i] * net[j];
             }
             // and push them through the activationFunction
             this.outp[i] = n.eval(tmp);
@@ -40,11 +34,17 @@ public class HiddenLayer extends Layer{
     }
 
     @Override
+    public void setWeights(double[][] w) {
+        if (w.length != this.weights.length) {
+            System.err.println(Error.SIZE_MISSMATCH);
+            System.exit(Error.SIZE_MISSMATCH.ordinal());
+        }
+        this.weights = w;
+    }
+
+    @Override
     public void setWeight(int start, int end, double val) {
         this.weights[start][end] = val;
-    }
-    public void setBias(int endNode, double val)  {
-        this.biasVal[endNode] = val;
     }
 }
 

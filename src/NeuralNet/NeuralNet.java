@@ -23,12 +23,14 @@ public class NeuralNet {
         this.hiddenLayers = new ArrayList<>();
     }
 
+    /*
     NeuralNet(int inpCnt, int outCnt) {
         // automatic type deduction
         hiddenLayers = new ArrayList<>();
         this.inputNeuronCnt = inpCnt;
         this.outputNeuronCnt = outCnt;
     }
+     */
 
     private int getInputNeuronCnt() {
         return this.inputNeuronCnt;
@@ -38,38 +40,54 @@ public class NeuralNet {
         return this.outputNeuronCnt;
     }
 
-    <T extends Neuron> void addInputLayer(Activationfunction actFunc, int InputNeuronCnt) {
+    /**
+     *
+     * @param InputNeuronCnt
+     * The number of input neurons. This determines, how many weights are generated for
+     * the input of the following hidden layer
+     */
+    void addInputLayer(int InputNeuronCnt) {
+        this.inputNeuronCnt = InputNeuronCnt;
         if(this.hasInputLayer) {
             System.out.println("Replacing existing InputLayer!");
-            this.inputLayer = new InputLayer(actFunc, this.inputNeuronCnt);
+            this.inputLayer = new InputLayer(this.inputNeuronCnt);
         } else {
             System.out.println("Creating InputLayer!");
-            this.inputLayer = new InputLayer(neuron,  actFunc, this.inputNeuronCnt);
+            this.inputLayer = new InputLayer(this.inputNeuronCnt);
         }
-        this.inputNeuronCnt = InputNeuronCnt;
         this.hasInputLayer = true;
     }
 
-    <T extends Neuron> void setOutputLayer(Class<T> neuron, Activationfunction actFunc) {
+    void addOutputLayer(Activationfunction actFunc, int OutpNeuronCnt) {
+        // get the inputCnt for the last layer, either a hiddenLayer or the inputLayer
+        int inpCnt =
+                (this.hasHiddenLayer
+                ? this.hiddenLayers.get(this.hiddenLayers.size()-1).getOutpCnt()
+                : this.inputNeuronCnt);
+        this.outputNeuronCnt = OutpNeuronCnt;
         if(this.hasOutputLayer) {
-            this.outputLayer = new OutputLayer(neuron, actFunc, this.outputNeuronCnt);
+            System.out.println("Replacing existing OutputLayer!");
+            this.outputLayer = new OutputLayer(actFunc, inpCnt, this.outputNeuronCnt);
         } else {
-            this.outputLayer = new OutputLayer(neuron, actFunc, this.outputNeuronCnt);
+            System.out.println("Adding existing OutputLayer!");
+            this.outputLayer = new OutputLayer(actFunc, inpCnt, this.outputNeuronCnt);
         }
         this.hasOutputLayer = true;
     }
 
-    void unsetInputLayer() {
+    void removeInputLayer() {
         this.inputLayer = null;
         this.hasInputLayer = false;
+        this.inputNeuronCnt = 0;
     }
 
-    void unsetOutputLayer() {
+    void removeOutputLayer() {
         this.outputLayer = null;
         this.hasOutputLayer = false;
+        this.outputNeuronCnt = 0;
     }
 
-    <T extends Neuron> void addHiddenLayer(Class<T> neuron, Activationfunction actFunc, int neuronCnt, boolean bias) {
+    void addHiddenLayer( Activationfunction actFunc, int neuronCnt) {
         // TODO finish me
         int cntLastLayer;
         if (this.hiddenLayers.size() == 0) {
@@ -77,32 +95,52 @@ public class NeuralNet {
         } else {
             cntLastLayer = this.hiddenLayers.get(this.hiddenLayers.size() - 1).getOutpCnt();
         }
-        this.hiddenLayers.add(new HiddenLayer(neuron, actFunc, cntLastLayer, neuronCnt, bias));
+        this.hiddenLayers.add(new HiddenLayer(actFunc, cntLastLayer, neuronCnt));
         this.outputLayer.setInpCnt(neuronCnt);
     }
 
     // TODO check, if it returns a copy or a reference
-    public Layer getHiddenLayer(int index) {
+    Layer getHiddenLayer(int index) {
         if (index >= this.hiddenLayers.size()) {
             return null;
         }
         return this.hiddenLayers.get(index);
     }
 
-    public void setWeightsHidden(int layer, int startNode, int stopNode, double w) {
+    public void removeHiddenLayer(int index) {
+        // TODO implement me
     }
-    public void setWeightsOutp(int startNode, int stopNode, double w) {
+
+    public void setWeightsHidden(int layer, int startNode, int stopNode, double w) {
+        // TODO implement me
+    }
+    void setWeightOutp(int startNode, int stopNode, double w) {
         this.outputLayer.setWeight(startNode, stopNode, w);
+    }
+
+    // does this work?
+    void setWeightsOutp(double[][] w) {
+        this.outputLayer.setWeights(w);
     }
 
     double[] eval(double[] inp) {
         // prepare result
         double[] res = new double[this.outputNeuronCnt];
-        this.inputLayer.eval(inp);
-        for(int i = 0; i<this.hiddenLayers.size(); i++) {
-            this.hiddenLayers.get(i).eval((i == 0?this.inputLayer.getOutp() : this.hiddenLayers.get(i-1).getOutp()));
+
+        this.inputLayer.setNet(inp);
+        this.inputLayer.eval();
+
+        // check if hidden layers do exist
+        if (this.hasHiddenLayer) {
+            for (int i = 0; i < this.hiddenLayers.size(); i++) {
+                   this.hiddenLayers.get(i).setNet(i == 0? this.inputLayer.getOutp() : this.hiddenLayers.get(i-1).getOutp());
+                   this.hiddenLayers.get(i).eval();
+            }
+            this.outputLayer.setNet(this.hiddenLayers.get(this.hiddenLayers.size()- 1).getOutp());
+        } else {
+            this.outputLayer.setNet(this.inputLayer.getOutp());
         }
-        this.outputLayer.eval(this.hiddenLayers.get(this.hiddenLayers.size()-1).getOutp());
+        this.outputLayer.eval();
         res = this.outputLayer.getOutp();
         return  res;
     }
@@ -129,8 +167,13 @@ public class NeuralNet {
      */
     public void setRandomWeights(double min, double max) {
         for (Layer a : this.hiddenLayers) {
+            int b = 1;
             // TODO finish this implementation
         }
+    }
+
+    public void readWeightsFromFile(String filename) {
+        //TODO Implement me
 
     }
 

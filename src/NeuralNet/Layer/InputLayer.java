@@ -1,27 +1,37 @@
 package NeuralNet.Layer;
 
 import NeuralNet.Activationfunction.Activationfunction;
-import NeuralNet.Neuron.Neuron;
+import NeuralNet.Error;
 
 public class InputLayer extends Layer{
-    public <T extends Neuron> InputLayer(Class<T> neuron, Activationfunction actFunc, int cnt) {
+    public InputLayer(int cnt) {
         this.inpCnt = cnt;
         this.outpCnt = cnt;
         this.outp = new double[this.outpCnt];
     }
 
+    /**
+     * This function sets the output of the layer to the given input
+     * There is nothing left what has to be done!
+     * The vector of input values
+     */
     @Override
-    public void eval(double[] val) {
-        // TODO implement me
-        this.outp = val;
+    public void eval() {
+        this.outp = this.net;
+    }
+
+    @Override
+    public void setWeights(double[][] w) {
+        if (w.length != this.weights.length) {
+            System.err.println(Error.SIZE_MISSMATCH);
+            System.exit(Error.SIZE_MISSMATCH.ordinal());
+        }
+        this.weights = w;
     }
 
     @Override
     public void setWeight(int a, int b, double x) {
-        System.out.println("Srsly???");
-    }
-
-    @Override
-    public void setBias(int endNode, double val) {
+        System.err.println(Error.SET_BIAS_IN_INPUT_LAYER);
+        System.exit(Error.SET_BIAS_IN_INPUT_LAYER.ordinal());
     }
 }

@@ -12,28 +12,39 @@ import java.util.List;
  *
  */
 public abstract class Layer {
-    private List<Neuron> Neuronen;
     int inpCnt, outpCnt;
+    /**
+     * First index: from
+     * Second index: to
+     */
     double[][] weights;
     double[] outp;
     double[] net;
+    Activationfunction actFunc;
 
     Layer() {
-        this.Neuronen = new ArrayList<>();
         this.inpCnt = 0;
         this.outpCnt = 0;
-        this.outp = new double[0];
+        this.actFunc = null;
+        initArrays();
     }
-    protected Layer(int inpCnt, int outpCnt) {
-        this.Neuronen = new ArrayList<>();
+    protected Layer(Activationfunction func, int inpCnt, int outpCnt) {
+        this.actFunc = func;
         this.inpCnt = inpCnt;
         this.outpCnt = outpCnt;
-        this.outp = new double[outpCnt];
+        initArrays();
     }
 
-    /**
-     * @return a value
-     */
+    private void initArrays() {
+        net = new double[inpCnt];
+        outp = new double[outpCnt];
+        // take into account the bias!
+        weights = new double[inpCnt + 1][outpCnt];
+    }
+
+    public void setNet(double[] val) {
+        this.net = val;
+    }
     public double[] getOutp() {
         return  this.outp;
     }
@@ -47,13 +58,10 @@ public abstract class Layer {
         this.inpCnt = cnt;
     }
 
-    public <T extends Neuron> Layer(Class<T> neuron, int cnt, boolean hasBias, Activationfunction actFunc) {
-    }
-
     // take care of the bias!
-    public abstract void eval(double[] val);
+    public abstract void eval();
     public abstract void setWeight(int start, int end, double val);
-    public abstract void setBias(int endNode, double val);
+    public abstract void setWeights(double[][] w);
 
 
 }

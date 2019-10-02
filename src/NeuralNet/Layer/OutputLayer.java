@@ -1,21 +1,15 @@
 package NeuralNet.Layer;
 
 import NeuralNet.Activationfunction.Activationfunction;
-import NeuralNet.Neuron.Neuron;
+import NeuralNet.Error;
 
 public class OutputLayer extends Layer{
-    public <T extends Neuron> OutputLayer(Class<T> neuron, Activationfunction actFunc, int outpCnt) {
-        this.inpCnt = 0;
+    public OutputLayer(Activationfunction actFunc, int inpCnt, int outpCnt) {
+        this.inpCnt = inpCnt + 1;
         this.outpCnt = outpCnt;
         this.weights = new double[this.inpCnt][this.outpCnt];
         this.outp = new double[this.outpCnt];
-    }
-
-    public <T extends Neuron> OutputLayer(Class<T> neuron, Activationfunction actFunc, int outpCnt, int inpCnt) {
-        this.inpCnt = inpCnt;
-        this.outpCnt = outpCnt;
-        this.weights = new double[this.inpCnt][this.outpCnt];
-        this.outp = new double[this.outpCnt];
+        this.actFunc = actFunc;
     }
 
     @Override
@@ -25,15 +19,29 @@ public class OutputLayer extends Layer{
     }
 
     @Override
-    public void eval(double[] val) {
-        // TODO implement me
-        // FIXME find the error
+    public void eval() {
+//         TODO does the bias work?
+        double tmp;
         for(int i = 0; i < this.outpCnt; i++ ) {
-            this.outp[i] = 0.0d;
-            for(int j = 0; j < this.inpCnt; j++) {
-                this.outp[i] += this.weights[j][i] * val[j];
+            tmp = 0.0;
+            for(int j = 0; j < this.inpCnt -1; j++) {
+//                this.outp[i] += this.weights[j][i] * net[j];
+                tmp += this.weights[j][i] * net[j];
             }
+            // bias here
+            tmp += this.weights[this.inpCnt - 1][i] * 1;
+            this.outp[i] = actFunc.activate(tmp);
         }
+    }
+
+    @Override
+    public void setWeights(double[][] w) {
+        System.out.println("w: " + w.length + "weigths: " + this.weights.length);
+        if (w.length != this.weights.length) {
+            System.err.println(Error.SIZE_MISSMATCH);
+            System.exit(Error.SIZE_MISSMATCH.ordinal());
+        }
+        this.weights = w;
     }
 
     @Override
@@ -43,9 +51,5 @@ public class OutputLayer extends Layer{
             return;
         }
         System.out.println("ERROR!!!!");
-    }
-
-    @Override
-    public void setBias(int endNode, double val) {
     }
 }
