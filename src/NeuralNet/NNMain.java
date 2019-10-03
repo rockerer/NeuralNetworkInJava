@@ -1,14 +1,16 @@
 package NeuralNet;
 
 import NeuralNet.Activationfunction.*;
+import NeuralNet.Learning.Backpropagation;
 import NeuralNet.Neuron.Perceptron;
 
 
 class NNMain {
     public static void main(String[] args) {
         System.out.println("Main started");
-        testNN0();
+//        testNN0();
 //        testNN1();
+        testNN2();
     }
 
     private static void testNN0() {
@@ -62,8 +64,21 @@ class NNMain {
 //        n.addHiddenLayer(Perceptron.class, new ActivationfunctionTanh(), 10, false);
         // hidden Layer, don't know, what it will do
 //        n.addHiddenLayer(Perceptron.class, new ActivationfunctionTanh(), 10, false);
+    }
 
+    private static void testNN2() {
+        NeuralNet n = new NeuralNet();
+        n.addInputLayer(2);
+        n.addOutputLayer(new ActivationfunctionSigmoid(), 1);
+        for (double a: n.eval(new double[]{10,10})) {
+            System.out.println(a);
+        }
+        Backpropagation bp = new Backpropagation(n);
+        bp.learn();
 
+        for (double a: n.eval(new double[]{10,10})) {
+            System.out.println(a);
+        }
     }
 
 }

@@ -8,6 +8,11 @@ public class OutputLayer extends Layer{
         this.inpCnt = inpCnt + 1;
         this.outpCnt = outpCnt;
         this.weights = new double[this.inpCnt][this.outpCnt];
+        for(int i = 0; i < this.inpCnt; i++) {
+            for(int j = 0; j< this.outpCnt; j++) {
+                this.weights[i][j] = 0.0;
+            }
+        }
         this.outp = new double[this.outpCnt];
         this.actFunc = actFunc;
     }

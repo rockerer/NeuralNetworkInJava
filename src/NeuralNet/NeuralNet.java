@@ -123,7 +123,7 @@ public class NeuralNet {
         this.outputLayer.setWeights(w);
     }
 
-    double[] eval(double[] inp) {
+    public double[] eval(double[] inp) {
         // prepare result
         double[] res = new double[this.outputNeuronCnt];
 
