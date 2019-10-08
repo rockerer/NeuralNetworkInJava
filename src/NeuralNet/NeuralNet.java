@@ -154,19 +154,17 @@ public class NeuralNet {
         double[] res = new double[this.outputNeuronCnt];
 
         this.inputLayer.setNet(inp);
-        this.inputLayer.eval();
+        this.inputLayer.eval(new double[]{});
 
         // check if hidden layers do exist
         if (this.hasHiddenLayer) {
             for (int i = 0; i < this.hiddenLayers.size(); i++) {
-                   this.hiddenLayers.get(i).setNet(i == 0? this.inputLayer.getOutp() : this.hiddenLayers.get(i-1).getOutp());
-                   this.hiddenLayers.get(i).eval();
+                   this.hiddenLayers.get(i).eval(i == 0 ? this.inputLayer.getOutp() : this.hiddenLayers.get(i).getOutp());
             }
-            this.outputLayer.setNet(this.hiddenLayers.get(this.hiddenLayers.size()- 1).getOutp());
+            this.outputLayer.eval(this.hiddenLayers.get(this.hiddenLayers.size()-1).getOutp());
         } else {
-            this.outputLayer.setNet(this.inputLayer.getOutp());
+            this.outputLayer.eval(this.inputLayer.getOutp());
         }
-        this.outputLayer.eval();
         res = this.outputLayer.getOutp();
         return  res;
     }

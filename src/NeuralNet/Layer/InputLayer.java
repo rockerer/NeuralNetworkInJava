@@ -16,6 +16,10 @@ public class InputLayer extends Layer{
      * The vector of input values
      */
     @Override
+    public void eval(double[] outpPrevLayer) {
+        this.outp = this.net;
+    }
+
     public void eval() {
         this.outp = this.net;
     }

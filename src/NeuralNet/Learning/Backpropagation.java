@@ -29,7 +29,7 @@ public class Backpropagation implements LearnAlgorithm{
      * Wrapper for calling initialize with default values
       */
     private void initialize() {
-        initialize(0, 1);
+        initialize(-1, 1);
     }
 
     /**

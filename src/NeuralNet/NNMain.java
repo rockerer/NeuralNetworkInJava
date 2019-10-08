@@ -69,7 +69,7 @@ class NNMain {
     private static void testNN2() {
         NeuralNet n = new NeuralNet();
         n.addInputLayer(2);
-        n.addHiddenLayer(new ActivationfunctionSigmoid(), 1);
+//        n.addHiddenLayer(new ActivationfunctionSigmoid(), 1);
         n.addHiddenLayer(new ActivationfunctionSigmoid(), 30);
         n.addOutputLayer(new ActivationfunctionSigmoid(), 1);
         for (double a: n.eval(new double[]{10,10})) {

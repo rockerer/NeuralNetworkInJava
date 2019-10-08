@@ -13,7 +13,7 @@ public class OutputLayer extends Layer{
                 this.weights[i][j] = 0.0;
             }
         }
-        this.net = new double[this.inpCnt];
+        this.net = new double[this.outpCnt];
         this.outp = new double[this.outpCnt];
         this.actFunc = actFunc;
     }
@@ -25,16 +25,25 @@ public class OutputLayer extends Layer{
     }
 
     @Override
-    public void eval() {
+    public void eval(double[] outpPrevLayer) {
+        if (outpPrevLayer.length != this.inpCnt - 1) {
+            System.err.println(Error.SIZE_MISSMATCH);
+            System.exit(Error.SIZE_MISSMATCH.ordinal());
+        }
         double tmp;
-        for(int i = 0; i < this.outpCnt; i++ ) {
+
+        // calculate net
+        // for each input neuron inclusive bias
+        for(int i = 0; i < this.outpCnt; i++) {
             tmp = 0.0;
+            // f***ing bias!
             for(int j = 0; j < this.inpCnt - 1; j++) {
-                tmp += this.weights[j][i] * net[j];
+                tmp += outpPrevLayer[j] * this.weights[j][i];
             }
             // bias here
-            tmp += this.weights[this.inpCnt - 1][i] * 1;
-            this.outp[i] = actFunc.activate(tmp);
+            tmp += 1 * this.weights[this.inpCnt - 1][i];
+            this.net[i] = tmp;
+            this.outp[i] = actFunc.activate(this.net[i]);
         }
     }
 

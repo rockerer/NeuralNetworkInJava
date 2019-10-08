@@ -59,7 +59,7 @@ public abstract class Layer {
     }
 
     // take care of the bias!
-    public abstract void eval();
+    public abstract void eval(double[] outpPrevLayer);
     public abstract void setWeight(int start, int end, double val);
     public abstract void setWeights(double[][] w);
 
