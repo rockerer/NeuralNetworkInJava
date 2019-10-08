@@ -69,14 +69,20 @@ class NNMain {
     private static void testNN2() {
         NeuralNet n = new NeuralNet();
         n.addInputLayer(2);
+        n.addHiddenLayer(new ActivationfunctionSigmoid(), 1);
+        n.addHiddenLayer(new ActivationfunctionSigmoid(), 30);
         n.addOutputLayer(new ActivationfunctionSigmoid(), 1);
         for (double a: n.eval(new double[]{10,10})) {
             System.out.println(a);
         }
         Backpropagation bp = new Backpropagation(n);
         bp.learn();
+        n.printInfo();
 
-        for (double a: n.eval(new double[]{10,10})) {
+        for (double a: n.eval(new double[]{1,0})) {
+            System.out.println(a);
+        }
+        for (double a: n.eval(new double[]{0,1})) {
             System.out.println(a);
         }
     }

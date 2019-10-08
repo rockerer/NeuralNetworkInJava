@@ -58,6 +58,16 @@ public class NeuralNet {
         this.hasInputLayer = true;
     }
 
+    void removeInputLayer() {
+        this.inputLayer = null;
+        this.hasInputLayer = false;
+        this.inputNeuronCnt = 0;
+    }
+
+    public boolean getHasInputLayer() {
+        return this.hasInputLayer;
+    }
+
     void addOutputLayer(Activationfunction actFunc, int OutpNeuronCnt) {
         // get the inputCnt for the last layer, either a hiddenLayer or the inputLayer
         int inpCnt =
@@ -69,16 +79,19 @@ public class NeuralNet {
             System.out.println("Replacing existing OutputLayer!");
             this.outputLayer = new OutputLayer(actFunc, inpCnt, this.outputNeuronCnt);
         } else {
-            System.out.println("Adding existing OutputLayer!");
+            System.out.println("Adding OutputLayer!");
             this.outputLayer = new OutputLayer(actFunc, inpCnt, this.outputNeuronCnt);
         }
         this.hasOutputLayer = true;
+        System.out.println("OutputLayer: Inp: " + inpCnt + "; Out: " + this.outputNeuronCnt);
     }
 
-    void removeInputLayer() {
-        this.inputLayer = null;
-        this.hasInputLayer = false;
-        this.inputNeuronCnt = 0;
+    public boolean getHasOutputLayers() {
+        return this.hasOutputLayer;
+    }
+
+    public Layer getOutputLayer() {
+        return this.outputLayer;
     }
 
     void removeOutputLayer() {
@@ -90,17 +103,30 @@ public class NeuralNet {
     void addHiddenLayer( Activationfunction actFunc, int neuronCnt) {
         // TODO finish me
         int cntLastLayer;
+        // get the last layer to which the new layer will be appended
         if (this.hiddenLayers.size() == 0) {
             cntLastLayer = this.getInputNeuronCnt();
         } else {
             cntLastLayer = this.hiddenLayers.get(this.hiddenLayers.size() - 1).getOutpCnt();
         }
         this.hiddenLayers.add(new HiddenLayer(actFunc, cntLastLayer, neuronCnt));
-        this.outputLayer.setInpCnt(neuronCnt);
+
+        /*
+        if (this.hasOutputLayer) {
+            // FIXME did i check everything here? I don't think so
+            this.outputLayer.setInpCnt(neuronCnt);
+        }
+         */
+        this.hasHiddenLayer = true;
+        System.out.println("HiddenLayer created. Inp: " + cntLastLayer + "; Outp: " + neuronCnt);
+    }
+
+    public int getHiddenLayerCnt() {
+        return this.hiddenLayers.size();
     }
 
     // TODO check, if it returns a copy or a reference
-    Layer getHiddenLayer(int index) {
+    public Layer getHiddenLayer(int index) {
         if (index >= this.hiddenLayers.size()) {
             return null;
         }
@@ -123,7 +149,7 @@ public class NeuralNet {
         this.outputLayer.setWeights(w);
     }
 
-    public double[] eval(double[] inp) {
+    double[] eval(double[] inp) {
         // prepare result
         double[] res = new double[this.outputNeuronCnt];
 
@@ -145,7 +171,7 @@ public class NeuralNet {
         return  res;
     }
 
-    public void printInfo() {
+    void printInfo() {
         System.out.println(
                 "InputLayer: " + (this.hasInputLayer ? "yes: " + this.inputNeuronCnt : "no") + ";\n" +
                         this.inputLayer.getInpCnt() + "\n" +

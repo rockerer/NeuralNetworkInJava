@@ -13,6 +13,7 @@ public class OutputLayer extends Layer{
                 this.weights[i][j] = 0.0;
             }
         }
+        this.net = new double[this.inpCnt];
         this.outp = new double[this.outpCnt];
         this.actFunc = actFunc;
     }
@@ -25,12 +26,10 @@ public class OutputLayer extends Layer{
 
     @Override
     public void eval() {
-//         TODO does the bias work?
         double tmp;
         for(int i = 0; i < this.outpCnt; i++ ) {
             tmp = 0.0;
-            for(int j = 0; j < this.inpCnt -1; j++) {
-//                this.outp[i] += this.weights[j][i] * net[j];
+            for(int j = 0; j < this.inpCnt - 1; j++) {
                 tmp += this.weights[j][i] * net[j];
             }
             // bias here

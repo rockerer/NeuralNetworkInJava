@@ -1,40 +1,48 @@
 package NeuralNet.Layer;
 
 import NeuralNet.Activationfunction.Activationfunction;
-import NeuralNet.Neuron.Neuron;
 import NeuralNet.Error;
 
-// A simple HiddenLayer, nothing fancy like a featuremap
+import java.nio.file.StandardOpenOption;
+
 public class HiddenLayer extends Layer{
-    private Neuron n;
     public HiddenLayer(Activationfunction actFunc, int inpCnt, int outpCnt) {
-        // take the bias into account
         this.inpCnt = inpCnt + 1;
         this.outpCnt = outpCnt;
+        this.weights = new double[this.inpCnt][this.outpCnt];
+        for(int i = 0; i < this.inpCnt; i++) {
+            for(int j = 0; j< this.outpCnt; j++) {
+                this.weights[i][j] = 0.0;
+            }
+        }
         this.net = new double[this.inpCnt];
         this.outp = new double[this.outpCnt];
-        this.weights = new double[inpCnt][outpCnt];
+        this.actFunc = actFunc;
     }
 
+    @Override
+    public void setInpCnt(int cnt) {
+        this.inpCnt = cnt;
+        this.weights = new double[this.inpCnt][this.outpCnt];
+    }
 
     @Override
     public void eval() {
-        // TODO implement me!
-        // go for every outp and calculate it by Vector-Matrix multiplication
         double tmp;
         for(int i = 0; i < this.outpCnt; i++ ) {
-            // collect all inputs
             tmp = 0.0d;
-            for(int j = 0; j < this.inpCnt; j++) {
+            for(int j = 0; j < this.inpCnt - 1; j++) {
                 tmp += this.weights[j][i] * net[j];
             }
-            // and push them through the activationFunction
-            this.outp[i] = n.eval(tmp);
+            // bias here
+            tmp += this.weights[this.inpCnt - 1][i] * 1;
+            this.outp[i] = actFunc.activate(tmp);
         }
     }
 
     @Override
     public void setWeights(double[][] w) {
+        System.out.println("w: " + w.length + "weigths: " + this.weights.length);
         if (w.length != this.weights.length) {
             System.err.println(Error.SIZE_MISSMATCH);
             System.exit(Error.SIZE_MISSMATCH.ordinal());
@@ -43,8 +51,12 @@ public class HiddenLayer extends Layer{
     }
 
     @Override
-    public void setWeight(int start, int end, double val) {
-        this.weights[start][end] = val;
+    public void setWeight(int startNode, int stopNode, double w) {
+        if(startNode < inpCnt && stopNode < outpCnt) {
+            weights[startNode][stopNode] = w;
+            return;
+        }
+        System.out.println("Error");
     }
 }
 
