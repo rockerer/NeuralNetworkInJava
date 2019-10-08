@@ -12,6 +12,7 @@ public class Backpropagation implements LearnAlgorithm{
 
     // here we have (almost) all information we need
     private NeuralNet neuralNet = null;
+    private double[][] trainingData = null;
 
 
     public Backpropagation() {
@@ -23,6 +24,9 @@ public class Backpropagation implements LearnAlgorithm{
 
     public void setNeuralNet(NeuralNet neuralNet) {
         this.neuralNet = neuralNet;
+    }
+    public void setTrainingData(double[][] data) {
+        this.trainingData = data;
     }
 
     /**
@@ -78,7 +82,18 @@ public class Backpropagation implements LearnAlgorithm{
         // initialize the network with random values
         initialize();
 
-        // learn round for round
+        // learn round for round by repeating the following steps:
+        /*
+        1. Feed the network with sampling-data
+        2. Compare output with expected result
+        3. Calculate Total Error
+        4. For each Layer l from output to first hiddenLayer do:
+            4a. For each Weight w do:
+                4a1. Calculate delta = d(TotalError)/d(w)
+                4a2. calculate w' = w - learningRate * delta
+            4b. Update w with w'
+         */
+        // start with the outputLayer
         /*
         for (double a: neuralNet.eval(new double[]{1,1})) {
             System.out.println(a);
