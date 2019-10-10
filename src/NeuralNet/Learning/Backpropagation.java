@@ -120,14 +120,16 @@ public class Backpropagation implements LearnAlgorithm{
             Layers.add(this.neuralNet.getHiddenLayer(j));
         }
 
-        double[] ErrorDOut = new double[0];
-        // #Layers = #HiddenLayers + 1 OutputLayer
-        // FIXME check if Layers.size is correct here!
-        double[][] dOutdnet = new double[Layers.size()][];
-        double[][] dNetdW = new double[Layers.size()][];
+            // #Layers = #HiddenLayers + 1 OutputLayer
+            // FIXME check if Layers.size is correct here!
+        double[][] dError_dW = new double[Layers.size()][];
+        double[][] dOut_dNet = new double[Layers.size()][];
+        double[][] dNet_dW = new double[Layers.size()][];
 
         for (Layer l: Layers) {
 //            3a. For each Weight w do:
+            dOut_dNet[Layers.indexOf(l)] = new double[l.getInpCnt()];
+            dNet_dW[Layers.indexOf(l)] = new double[l.getInpCnt()];
             for (int iW = 0; iW < l.getInpCnt(); iW++) {
 //                3a1. Calculate delta = d(TotalError)/d(w)
 
