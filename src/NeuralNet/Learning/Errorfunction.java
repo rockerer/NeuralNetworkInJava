@@ -1,7 +1,7 @@
 package NeuralNet.Learning;
 
 class Errorfunction {
-    double calculateTotalError(double[] target, double[] output) {
+    static double calculateTotalError(double[] target, double[] output) {
         if (target.length != output.length) {
             System.err.println("Arrays don't match!");
             return Double.MAX_VALUE;

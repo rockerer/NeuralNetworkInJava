@@ -9,8 +9,8 @@ class NNMain {
     public static void main(String[] args) {
         System.out.println("Main started");
 //        testNN0();
-//        testNN1();
-        testNN2();
+        testNN1();
+//        testNN2();
     }
 
     private static void testNN0() {
@@ -57,7 +57,36 @@ class NNMain {
     }
 
     private static void testNN1() {
+        // create neural network
         NeuralNet n = new NeuralNet();
+        n.addInputLayer(2);
+        n.addOutputLayer(new ActivationfunctionSigmoid(), 1);
+
+//        n.setWeightsOutp(new double[][] {{1},{1},{-1}});
+
+        Backpropagation bp = new Backpropagation(n);
+        bp.setTrainingData(new double[][][]
+        {
+            {
+                {0, 0},
+                {0}
+            },
+            {
+                {0, 1},
+                {0}
+            },
+            {
+                {1, 0},
+                {0}
+            },
+            {
+                {1, 1},
+                {1}
+            },
+        });
+
+        bp.learn(true);
+
         // we input 10 values in range [-1, 1]
 //        n.addInputLayer(Perceptron.class, new ActivationfunctionTanh());
 //        n.setOutputLayer(Perceptron.class, new ActivationfunctionTanh());
@@ -76,7 +105,7 @@ class NNMain {
             System.out.println(a);
         }
         Backpropagation bp = new Backpropagation(n);
-        bp.learn();
+        bp.learn(true);
         n.printInfo();
 
         for (double a: n.eval(new double[]{1,0})) {
