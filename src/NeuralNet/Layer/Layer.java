@@ -35,6 +35,10 @@ public abstract class Layer {
         initArrays();
     }
 
+    public Activationfunction getActFunc() {
+        return this.actFunc;
+    }
+
     private void initArrays() {
         net = new double[inpCnt];
         outp = new double[outpCnt];

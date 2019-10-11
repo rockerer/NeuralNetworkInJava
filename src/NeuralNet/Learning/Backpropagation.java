@@ -5,6 +5,7 @@ import NeuralNet.NeuralNet;
 
 import NeuralNet.Learning.Errorfunction;
 
+import javax.security.auth.callback.LanguageCallback;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class Backpropagation implements LearnAlgorithm{
 
     /**
      * Wrapper for calling initialize with default values
-      */
+     */
     private void initialize() {
         initialize(-1, 1);
     }
@@ -104,54 +105,63 @@ public class Backpropagation implements LearnAlgorithm{
          */
         for(int i = 0; i < this.trainingData.length; i++) {
 
-        // 1. Feed the network with sampling-data
-        // TODO implement me
+            // 1. Feed the network with sampling-data
+            // TODO implement me
             double[] outp = this.neuralNet.eval(this.trainingData[i][0]);
 
-        // 2. Compare output with expected result
-        double ErrorTotal = Errorfunction.calculateTotalError(this.trainingData[i][1], outp);
-        System.out.println(ErrorTotal);
+            // 2. Compare output with expected result
+            double[] Error = Errorfunction.calculateError(this.trainingData[i][1], outp);
+            double ErrorTotal = Errorfunction.calculateTotalError(Error);
+//        double ErrorTotal = Errorfunction.calculateTotalError(this.trainingData[i][1], outp);
+            System.out.println(ErrorTotal);
 
-        // 3. For each Layer l from output to first hiddenLayer do:
-        // create a List of Layers to work with in reversed order
-        List<Layer> Layers = new ArrayList<>();
-        Layers.add(neuralNet.getOutputLayer());
-        for (int j = this.neuralNet.getHiddenLayerCnt()-1; j >= 0; j--) {
-            Layers.add(this.neuralNet.getHiddenLayer(j));
-        }
+            // 3. For each Layer l from output to first hiddenLayer do:
+            // create a List of Layers to work with in reversed order
+            List<Layer> Layers = new ArrayList<>();
+            Layers.add(neuralNet.getOutputLayer());
+            for (int j = this.neuralNet.getHiddenLayerCnt()-1; j >= 0; j--) {
+                Layers.add(this.neuralNet.getHiddenLayer(j));
+            }
 
             // #Layers = #HiddenLayers + 1 OutputLayer
             // FIXME check if Layers.size is correct here!
-        double[][] dError_dW = new double[Layers.size()][];
-        double[][] dOut_dNet = new double[Layers.size()][];
-        double[][] dNet_dW = new double[Layers.size()][];
+            int layerCnt = Layers.size();
+            double[][] dError_dOut = new double[layerCnt][];
+            double[][] dOut_dNet = new double[layerCnt][];
+            double[][] dNet_dW = new double[layerCnt][];
 
-        for (Layer l: Layers) {
+            double[][] wUpdated = new double[layerCnt][];
+
+//        i don't i need this
+//        double[][] dError_dW = new double[layerCnt][];
+
+            for (Layer l: Layers) {
+                int actLayer = Layers.indexOf(l);
+                dOut_dNet[actLayer] = new double[l.getInpCnt()];
+                dNet_dW[actLayer] = new double[l.getInpCnt()];
+
 //            3a. For each Weight w do:
-            dOut_dNet[Layers.indexOf(l)] = new double[l.getInpCnt()];
-            dNet_dW[Layers.indexOf(l)] = new double[l.getInpCnt()];
-            for (int iW = 0; iW < l.getInpCnt(); iW++) {
+                for (int iW = 0; iW < l.getInpCnt(); iW++) {
 //                3a1. Calculate delta = d(TotalError)/d(w)
+//                calculate dOut_dNet[actLayer][iW]
+                    // unsure if i have to take the output or the input
+                    dOut_dNet[actLayer][iW] = l.getActFunc().derivative(l.getOutp()[iW]);
+//                dOut_dNet[actLayer][iW] = l.getActFunc().derivative(l.getNet()[iW]);
+
+//                dError_dOut[actLayer][iW] = summe von dingen
+                    double dErr_dOut_tmp = 0;
+                    int _layer = actLayer;
+                    while(_layer < layerCnt) {
+                    }
+
+
 
 //                3a2. calculate w' = w - learningRate * delta
 //                3b. Update w with w'
+//                  get old weights and update them with the corresponding learningrate
 
+                }
             }
-
-
         }
-
-        // start with the outputLayer
-        /*
-        for (double a: neuralNet.eval(new double[]{1,1})) {
-            System.out.println(a);
-        }
-         */
-
-        // save/export the values
-
-        }
-
     }
-
 }
