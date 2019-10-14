@@ -127,13 +127,14 @@ public class Backpropagation implements LearnAlgorithm{
             // FIXME check if Layers.size is correct here!
             int layerCnt = Layers.size();
             double[][] dError_dOut = new double[layerCnt][];
+            double[][] dError_dNet = new double[layerCnt][];
             double[][] dOut_dNet = new double[layerCnt][];
             double[][] dNet_dW = new double[layerCnt][];
 
             double[][] wUpdated = new double[layerCnt][];
 
 //        i don't i need this
-//        double[][] dError_dW = new double[layerCnt][];
+        double[][] dError_dW = new double[layerCnt][];
 
             for (Layer l: Layers) {
                 int actLayer = Layers.indexOf(l);
@@ -141,18 +142,21 @@ public class Backpropagation implements LearnAlgorithm{
                 dNet_dW[actLayer] = new double[l.getInpCnt()];
 
 //            3a. For each Weight w do:
+//                Take care of the bias
                 for (int iW = 0; iW < l.getInpCnt(); iW++) {
 //                3a1. Calculate delta = d(TotalError)/d(w)
 //                calculate dOut_dNet[actLayer][iW]
-                    // unsure if i have to take the output or the input
+                    dNet_dW[actLayer][0] = Layers.get(actLayer + 1).getOutp()[iW];
                     dOut_dNet[actLayer][iW] = l.getActFunc().derivative(l.getOutp()[iW]);
 //                dOut_dNet[actLayer][iW] = l.getActFunc().derivative(l.getNet()[iW]);
 
 //                dError_dOut[actLayer][iW] = summe von dingen
-                    double dErr_dOut_tmp = 0;
-                    int _layer = actLayer;
-                    while(_layer < layerCnt) {
-                    }
+                    dError_dOut[actLayer][iW] =
+                            ( actLayer == layerCnt ?
+                                    (outp[iW] - this.trainingData[i][1][iW]) :
+//                                    Hier Summe berechnen
+                                    -1
+                                    );
 
 
 
