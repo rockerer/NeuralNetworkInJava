@@ -12,6 +12,10 @@ class Errorfunction {
         return res;
     }
 
+    static double calculateErrorDeriv(double target, double output) {
+        return (output - target);
+    }
+
     static double calculateTotalError(double[] singleErrors) {
         double res = 0;
         for (double x: singleErrors) {

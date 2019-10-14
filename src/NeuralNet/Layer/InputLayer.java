@@ -18,6 +18,13 @@ public class InputLayer extends Layer{
     @Override
     public void eval(double[] outpPrevLayer) {
         this.outp = this.net;
+
+        // debug
+        System.out.println("Output of Input-Layer:");
+        for(double x : this.outp) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
     }
 
     public void eval() {

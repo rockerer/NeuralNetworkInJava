@@ -61,6 +61,14 @@ public abstract class Layer {
     public void setInpCnt(int cnt) {
         this.inpCnt = cnt;
     }
+    public void printWeights() {
+        for(int i = 0; i < this.getInpCnt(); i++) {
+            System.out.println("\nWeights for Neuron " + i);
+            for(int j = 0; j < this.getOutpCnt(); j++) {
+                System.out.print(this.weights[i][j] + " " );
+            }
+        }
+    }
 
     // take care of the bias!
     public abstract void eval(double[] outpPrevLayer);

@@ -34,6 +34,13 @@ public class HiddenLayer extends Layer{
         }
         double tmp;
 
+        // debug
+        System.out.println("outPrevLayer");
+        for(double x : outpPrevLayer) {
+            System.out.print(x + " ");
+        }
+        System.out.println();
+
         // calculate net
         // for each input neuron inclusive bias
         for(int i = 0; i < this.outpCnt; i++ ) {
@@ -43,9 +50,22 @@ public class HiddenLayer extends Layer{
                 tmp += outpPrevLayer[j] * this.weights[j][i];
             }
             // bias here
-            tmp += 1 * this.weights[this.inpCnt - 1][i];
+            tmp += 1.0 * this.weights[this.inpCnt - 1][i];
             this.net[i] = tmp;
+
+            // debug
+            System.out.println("Input to hidden Layer:");
+            for(double x : this.net) {
+                System.out.print(x + ", ");
+            }
+            System.out.println();
+
+            System.out.println("Output of Hidden Layer");
             this.outp[i] = actFunc.activate(this.net[i]);
+            for(double x : this.outp) {
+                System.out.print(x + " ");
+            }
+            System.out.println();
         }
     }
 
@@ -67,7 +87,7 @@ public class HiddenLayer extends Layer{
     @Override
     public void setWeight(int startNode, int stopNode, double w) {
         if(startNode < inpCnt && stopNode < outpCnt) {
-            weights[startNode][stopNode] = w;
+            this.weights[startNode][stopNode] = w;
             return;
         }
         System.out.println("Error");

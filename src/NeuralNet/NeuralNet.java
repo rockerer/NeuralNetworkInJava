@@ -143,6 +143,9 @@ public class NeuralNet {
 
     public void setWeightsHidden(int layer, int startNode, int stopNode, double w) {
         // TODO implement me
+        if (layer < this.getHiddenLayerCnt()) {
+            this.getHiddenLayer(layer).setWeight(startNode, stopNode, w);
+        }
     }
     void setWeightOutp(int startNode, int stopNode, double w) {
         this.outputLayer.setWeight(startNode, stopNode, w);
@@ -163,8 +166,11 @@ public class NeuralNet {
         // check if hidden layers do exist
         if (this.hasHiddenLayer) {
             for (int i = 0; i < this.hiddenLayers.size(); i++) {
-                   this.hiddenLayers.get(i).eval(i == 0 ? this.inputLayer.getOutp() : this.hiddenLayers.get(i).getOutp());
+                   this.hiddenLayers.get(i).eval(i == 0 ?
+                           this.inputLayer.getOutp() :
+                           this.hiddenLayers.get(i).getOutp());
             }
+            // last layer
             this.outputLayer.eval(this.hiddenLayers.get(this.hiddenLayers.size()-1).getOutp());
         } else {
             this.outputLayer.eval(this.inputLayer.getOutp());

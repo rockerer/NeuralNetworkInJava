@@ -3,9 +3,6 @@ package NeuralNet.Learning;
 import NeuralNet.Layer.Layer;
 import NeuralNet.NeuralNet;
 
-import NeuralNet.Learning.Errorfunction;
-
-import javax.security.auth.callback.LanguageCallback;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +108,10 @@ public class Backpropagation implements LearnAlgorithm{
 
             // 1. Feed the network with sampling-data
             // TODO implement me
-            double[] outp = this.neuralNet.eval(this.trainingData[i][0]);
+            double[] outp = this.neuralNet.eval(new double[] {1,1});
+//            double[] outp = this.neuralNet.eval(this.trainingData[i][0]);
+                    //this.neuralNet.eval(new double[] {1,2});
+            double[] target = this.trainingData[i][1];
 
             // 2. Compare output with expected result
             double[] Error = Errorfunction.calculateError(this.trainingData[i][1], outp);
@@ -132,9 +132,9 @@ public class Backpropagation implements LearnAlgorithm{
             int layerCnt = Layers.size();
 
             // Errors
-            double[][][] dError_dOut = new double[layerCnt][outp.length][];
+            double[][][] dError_dOut = new double[layerCnt][][];
+            double[][][] dError_dNet = new double[layerCnt][][];
             double[][] dErrorSum_dOut = new double[layerCnt][];
-            double[][] dError_dNet = new double[layerCnt][];
             double[][] dError_dW = new double[layerCnt][];
 
             // Net -> Something
@@ -151,13 +151,18 @@ public class Backpropagation implements LearnAlgorithm{
                 dOut_dNet[actLayer] = new double[l.getInpCnt()];
                 dNet_dW[actLayer] = new double[l.getInpCnt()][];
 
+                dError_dNet[actLayer] = new double[l.getOutpCnt()][];
+                dError_dOut[actLayer] = new double[l.getOutpCnt()][];
+
 //            3a. For each Node n do:
-                for(int n = 0; n < l.getInpCnt(); n++ ) {
+                for(int n = 0; n < l.getOutpCnt(); n++ ) {
                     // Initialize dNet_dW for node n
                     dNet_dW[actLayer][n] = new double[l.getInpCnt()];
-                    dNet_dOut[layerCnt][n] = new double[l.getInpCnt()];
+                    dNet_dOut[actLayer][n] = new double[l.getInpCnt()];
                     dOut_dNet[actLayer][n] = l.getActFunc().derivative(l.getOutp()[n]);
-                    dError_dOut[][n] = new double[];
+                    dError_dOut[actLayer][n] = new double[outp.length];
+                    dError_dNet[actLayer][n] = new double[outp.length];
+                    dErrorSum_dOut[actLayer] = new double[outp.length];
 
 
 //                  3a1. For each Weight w pointing to no n do:
@@ -181,7 +186,25 @@ public class Backpropagation implements LearnAlgorithm{
                         // Bias has no effect here
                         dNet_dOut[actLayer][n][iW] = l.getWeight(n, iW);
 
+                        // calculate dOut_dNet
+                        dOut_dNet[actLayer][n] = l.getOutp()[n] * (1 - l.getOutp()[n]);
 
+
+                        // calculate dError_dOut
+                        for(int x = 0; x < outp.length; x++) {
+                            // if output-layer
+                            if (actLayer == 0) {
+                                dError_dOut[actLayer][n][x] = outp[x] - target[x];
+                            } else {
+                                double tmp = 0.0d;
+                                for(int actNeuron = 0; actNeuron < l.getOutpCnt(); actNeuron++) {
+                                    tmp += dError_dNet[actLayer - 1][actNeuron][x] * dNet_dOut[actLayer-1][n][actNeuron];
+                                }
+                                dError_dOut[actLayer][n][x] = tmp;
+                            }
+                            // calculate dError_dNet
+                            dError_dNet[actLayer][n][x] = dError_dOut[actLayer][n][x] * dOut_dNet[actLayer][n];
+                        }
 
 
 //                Take care of the bias
@@ -204,6 +227,10 @@ public class Backpropagation implements LearnAlgorithm{
 
 
 
+                    }
+                    dErrorSum_dOut[actLayer][n] = 0;
+                    for(double x : dError_dOut[actLayer][n]) {
+                        dErrorSum_dOut[actLayer][n] += x;
                     }
                 }
 //                3a2. calculate w' = w - learningRate * delta
