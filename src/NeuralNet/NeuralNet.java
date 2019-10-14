@@ -68,6 +68,10 @@ public class NeuralNet {
         return this.hasInputLayer;
     }
 
+    public Layer getInputLayer() {
+        return this.inputLayer;
+    }
+
     void addOutputLayer(Activationfunction actFunc, int OutpNeuronCnt) {
         // get the inputCnt for the last layer, either a hiddenLayer or the inputLayer
         int inpCnt =

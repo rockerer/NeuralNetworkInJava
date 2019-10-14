@@ -34,6 +34,11 @@ public class InputLayer extends Layer{
     }
 
     @Override
+    public double getWeight(int start, int end) {
+        return this.weights[start][end];
+    }
+
+    @Override
     public void setWeight(int a, int b, double x) {
         System.err.println(Error.SET_BIAS_IN_INPUT_LAYER);
         System.exit(Error.SET_BIAS_IN_INPUT_LAYER.ordinal());

@@ -18,7 +18,11 @@ public class Backpropagation implements LearnAlgorithm{
     // here we have (almost) all information we need
     private NeuralNet neuralNet = null;
     /**
-     * trainingData consists of #row, 0: training Input; 1: expected Output , values
+     * trainingData consists of<br/>
+     * #row <br/>
+     *  0: training Input<br/>
+     *  1: expected Output<br>
+     * values
      */
     private double[][][] trainingData = null;
 
@@ -126,45 +130,86 @@ public class Backpropagation implements LearnAlgorithm{
             // #Layers = #HiddenLayers + 1 OutputLayer
             // FIXME check if Layers.size is correct here!
             int layerCnt = Layers.size();
-            double[][] dError_dOut = new double[layerCnt][];
+
+            // Errors
+            double[][][] dError_dOut = new double[layerCnt][outp.length][];
+            double[][] dErrorSum_dOut = new double[layerCnt][];
             double[][] dError_dNet = new double[layerCnt][];
+            double[][] dError_dW = new double[layerCnt][];
+
+            // Net -> Something
+            double[][][] dNet_dW = new double[layerCnt][][];
+            double[][][] dNet_dOut = new double[layerCnt][][];
+
+            // Net -> next Net
             double[][] dOut_dNet = new double[layerCnt][];
-            double[][] dNet_dW = new double[layerCnt][];
 
             double[][] wUpdated = new double[layerCnt][];
-
-//        i don't i need this
-        double[][] dError_dW = new double[layerCnt][];
 
             for (Layer l: Layers) {
                 int actLayer = Layers.indexOf(l);
                 dOut_dNet[actLayer] = new double[l.getInpCnt()];
-                dNet_dW[actLayer] = new double[l.getInpCnt()];
+                dNet_dW[actLayer] = new double[l.getInpCnt()][];
 
-//            3a. For each Weight w do:
+//            3a. For each Node n do:
+                for(int n = 0; n < l.getInpCnt(); n++ ) {
+                    // Initialize dNet_dW for node n
+                    dNet_dW[actLayer][n] = new double[l.getInpCnt()];
+                    dNet_dOut[layerCnt][n] = new double[l.getInpCnt()];
+                    dOut_dNet[actLayer][n] = l.getActFunc().derivative(l.getOutp()[n]);
+                    dError_dOut[][n] = new double[];
+
+
+//                  3a1. For each Weight w pointing to no n do:
+                    for (int iW = 0; iW < l.getInpCnt(); iW++) {
+
+
+                        // Set dNet_dW
+                        // Bias
+                        if (iW == l.getInpCnt() - 1) {
+                            dNet_dW[actLayer][n][iW] = 1;
+                        } else {
+                            // Non-Bias
+                            if (layerCnt == Layers.size()) {
+                                dNet_dW[actLayer][n][iW] = neuralNet.getInputLayer().getOutp()[iW];
+                            } else {
+                                dNet_dW[actLayer][n][iW] = Layers.get(layerCnt + 1).getOutp()[iW];
+                            }
+                        }
+
+                        // set dNet_dOut
+                        // Bias has no effect here
+                        dNet_dOut[actLayer][n][iW] = l.getWeight(n, iW);
+
+
+
+
 //                Take care of the bias
-                for (int iW = 0; iW < l.getInpCnt(); iW++) {
 //                3a1. Calculate delta = d(TotalError)/d(w)
 //                calculate dOut_dNet[actLayer][iW]
-                    dNet_dW[actLayer][0] = Layers.get(actLayer + 1).getOutp()[iW];
-                    dOut_dNet[actLayer][iW] = l.getActFunc().derivative(l.getOutp()[iW]);
+//                    dNet_dW[actLayer][0] = Layers.get(actLayer + 1).getOutp()[iW];
+//                    dOut_dNet[actLayer][iW] = l.getActFunc().derivative(l.getOutp()[iW]);
 //                dOut_dNet[actLayer][iW] = l.getActFunc().derivative(l.getNet()[iW]);
 
 //                dError_dOut[actLayer][iW] = summe von dingen
+                    /*
                     dError_dOut[actLayer][iW] =
                             ( actLayer == layerCnt ?
                                     (outp[iW] - this.trainingData[i][1][iW]) :
-//                                    Hier Summe berechnen
+//                                    TODO calculate this value
                                     -1
                                     );
+                     */
 
 
 
+
+                    }
+                }
 //                3a2. calculate w' = w - learningRate * delta
 //                3b. Update w with w'
 //                  get old weights and update them with the corresponding learningrate
 
-                }
             }
         }
     }

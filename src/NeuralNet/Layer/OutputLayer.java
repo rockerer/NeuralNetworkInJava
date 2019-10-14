@@ -58,6 +58,11 @@ public class OutputLayer extends Layer{
     }
 
     @Override
+    public double getWeight(int start, int end) {
+        return this.weights[start][end];
+    }
+
+    @Override
     public void setWeight(int startNode, int stopNode, double w) {
         if (startNode < inpCnt && stopNode < outpCnt) {
             weights[startNode][stopNode] = w;

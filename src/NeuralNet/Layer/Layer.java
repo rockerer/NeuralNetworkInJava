@@ -66,6 +66,7 @@ public abstract class Layer {
     public abstract void eval(double[] outpPrevLayer);
     public abstract void setWeight(int start, int end, double val);
     public abstract void setWeights(double[][] w);
+    public abstract double getWeight(int start, int end);
 
 
 }
