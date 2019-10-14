@@ -147,16 +147,16 @@ class NNMain {
         n.setWeightOutp(2, 0, 0.6);
         n.setWeightOutp(2, 1, 0.6);
 */
-        n.printInfo();
+//        n.printInfo();
 
-        n.getHiddenLayer(0).printWeights();
+//        n.getHiddenLayer(0).printWeights();
 
-        double[] outp = n.eval(new double[] {0.05, 0.1});
-        for(double x: outp)  {
-            System.out.println(x);
-        }
+//        double[] outp = n.eval(new double[] {0.05, 0.1});
+//        for(double x: outp)  {
+//            System.out.println(x);
+//        }
 
-        Backpropagation bp = new Backpropagation();
+        Backpropagation bp = new Backpropagation(n);
         bp.setTrainingData(new double[][][]{
                 {
                         {0.05, 0.10},
@@ -167,7 +167,7 @@ class NNMain {
                         {0.01, 0.99}
                 }
        });
-//        bp.learn(false);
+        bp.learn(false);
 //        bp.learn(true);
 
     }

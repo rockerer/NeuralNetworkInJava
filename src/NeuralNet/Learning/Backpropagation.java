@@ -3,6 +3,8 @@ package NeuralNet.Learning;
 import NeuralNet.Layer.Layer;
 import NeuralNet.NeuralNet;
 
+import NeuralNet.Error;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +90,10 @@ public class Backpropagation implements LearnAlgorithm{
 
 
     public void learn(boolean init) {
-        System.out.println("Started learning");
+        if (this.neuralNet == null) {
+            System.err.println(Error.NO_NEURAL_NET_GIVEN);
+            System.exit(Error.NO_NEURAL_NET_GIVEN.ordinal());
+        }
         // initialize the network with random values
         if(init) {
             initialize();
@@ -108,10 +113,12 @@ public class Backpropagation implements LearnAlgorithm{
 
             // 1. Feed the network with sampling-data
             // TODO implement me
-            double[] outp = this.neuralNet.eval(new double[] {1,1});
-//            double[] outp = this.neuralNet.eval(this.trainingData[i][0]);
+            System.out.println("Evaluating the " + i + ".th round");
+//            double[] outp = this.neuralNet.eval(new double[] {1,1});
+            double[] outp = this.neuralNet.eval(this.trainingData[i][0]);
                     //this.neuralNet.eval(new double[] {1,2});
             double[] target = this.trainingData[i][1];
+            System.out.println("Evaluation finished");
 
             // 2. Compare output with expected result
             double[] Error = Errorfunction.calculateError(this.trainingData[i][1], outp);
@@ -150,6 +157,7 @@ public class Backpropagation implements LearnAlgorithm{
                 int actLayer = Layers.indexOf(l);
                 dOut_dNet[actLayer] = new double[l.getInpCnt()];
                 dNet_dW[actLayer] = new double[l.getInpCnt()][];
+                dNet_dOut[actLayer] = new double[l.getInpCnt()][];
 
                 dError_dNet[actLayer] = new double[l.getOutpCnt()][];
                 dError_dOut[actLayer] = new double[l.getOutpCnt()][];

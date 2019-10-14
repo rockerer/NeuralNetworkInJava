@@ -54,18 +54,17 @@ public class HiddenLayer extends Layer{
             this.net[i] = tmp;
 
             // debug
-            System.out.println("Input to hidden Layer:");
-            for(double x : this.net) {
-                System.out.print(x + ", ");
-            }
-            System.out.println();
 
-            System.out.println("Output of Hidden Layer");
             this.outp[i] = actFunc.activate(this.net[i]);
-            for(double x : this.outp) {
-                System.out.print(x + " ");
-            }
-            System.out.println();
+        }
+        System.out.println("Input to hidden Layer:");
+        for(double x : this.net) {
+            System.out.print(x + ", ");
+        }
+        System.out.println();
+        System.out.println("Output of Hidden Layer");
+        for(double x : this.outp) {
+            System.out.print(x + " ");
         }
     }
 
