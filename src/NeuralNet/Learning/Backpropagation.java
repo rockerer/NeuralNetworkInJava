@@ -124,7 +124,7 @@ public class Backpropagation implements LearnAlgorithm{
             double[] Error = Errorfunction.calculateError(this.trainingData[i][1], outp);
             double ErrorTotal = Errorfunction.calculateTotalError(Error);
 //        double ErrorTotal = Errorfunction.calculateTotalError(this.trainingData[i][1], outp);
-            System.out.println(ErrorTotal);
+            System.out.println("Total Error: " + ErrorTotal);
 
             // 3. For each Layer l from output to first hiddenLayer do:
             // create a List of Layers to work with in reversed order
@@ -142,6 +142,7 @@ public class Backpropagation implements LearnAlgorithm{
             double[][][] dError_dOut = new double[layerCnt][][];
             double[][][] dError_dNet = new double[layerCnt][][];
             double[][] dErrorSum_dOut = new double[layerCnt][];
+            // TODO calculate this value
             double[][] dError_dW = new double[layerCnt][];
 
             // Net -> Something
@@ -176,7 +177,6 @@ public class Backpropagation implements LearnAlgorithm{
 //                  3a1. For each Weight w pointing to no n do:
                     for (int iW = 0; iW < l.getInpCnt(); iW++) {
 
-
                         // Set dNet_dW
                         // Bias
                         if (iW == l.getInpCnt() - 1) {
@@ -192,7 +192,7 @@ public class Backpropagation implements LearnAlgorithm{
 
                         // set dNet_dOut
                         // Bias has no effect here
-                        dNet_dOut[actLayer][n][iW] = l.getWeight(n, iW);
+                        dNet_dOut[actLayer][n][iW] = l.getWeight(iW, n);
 
                         // calculate dOut_dNet
                         dOut_dNet[actLayer][n] = l.getOutp()[n] * (1 - l.getOutp()[n]);

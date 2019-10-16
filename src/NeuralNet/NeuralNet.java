@@ -158,12 +158,15 @@ public class NeuralNet {
 
     public double[] eval(double[] inp) {
         // prepare result
-        System.out.println("Inside eval");
+//        System.out.println("Inside eval");
         double[] res = new double[this.outputNeuronCnt];
 
+        // debug
+        /*
         for(double x: inp) {
             System.out.println(x);
         }
+         */
 
         this.inputLayer.setNet(inp);
         this.inputLayer.eval(new double[]{});

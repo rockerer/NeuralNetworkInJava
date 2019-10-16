@@ -35,11 +35,13 @@ public class HiddenLayer extends Layer{
         double tmp;
 
         // debug
+        /*
         System.out.println("outPrevLayer");
         for(double x : outpPrevLayer) {
             System.out.print(x + " ");
         }
         System.out.println();
+         */
 
         // calculate net
         // for each input neuron inclusive bias
@@ -57,6 +59,7 @@ public class HiddenLayer extends Layer{
 
             this.outp[i] = actFunc.activate(this.net[i]);
         }
+        /*
         System.out.println("Input to hidden Layer:");
         for(double x : this.net) {
             System.out.print(x + ", ");
@@ -66,6 +69,7 @@ public class HiddenLayer extends Layer{
         for(double x : this.outp) {
             System.out.print(x + " ");
         }
+        */
     }
 
     @Override
