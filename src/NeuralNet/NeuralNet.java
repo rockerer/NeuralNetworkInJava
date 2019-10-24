@@ -145,6 +145,9 @@ public class NeuralNet {
         // TODO implement me
         if (layer < this.getHiddenLayerCnt()) {
             this.getHiddenLayer(layer).setWeight(startNode, stopNode, w);
+        } else {
+            System.err.println(Error.LAYER_NOT_EXISTS);
+            System.exit(Error.LAYER_NOT_EXISTS.ordinal());
         }
     }
     void setWeightOutp(int startNode, int stopNode, double w) {

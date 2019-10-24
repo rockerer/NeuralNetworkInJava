@@ -11,7 +11,8 @@ class NNMain {
 //        testNN0();
 //        testNN1();
 //        testNN2();
-        testNN4();
+//        testNN4();
+        testNNXORReLu();
     }
 
     private static void testNN0() {
@@ -169,7 +170,35 @@ class NNMain {
        });
         bp.learn(false);
 //        bp.learn(true);
+    }
 
+    public static void testNNXORReLu() {
+        NeuralNet n = new NeuralNet();
+        n.addInputLayer(2);
+        n.addHiddenLayer(new ActivationfunctionReLu(), 2);
+        n.addOutputLayer(new ActivationfunctionReLu(), 1);
+
+        n.setWeightsHidden(0, 0, 0, 1);
+        n.setWeightsHidden(0, 0, 1, -1);
+        n.setWeightsHidden(0, 1, 0, -1);
+        n.setWeightsHidden(0, 1, 1, 1);
+
+        n.setWeightOutp(0, 0, 1);
+        n.setWeightOutp(1, 0, 1);
+
+
+        for(double x: n.eval(new double[]{0,0})) {
+            System.out.println(x);
+        }
+        for(double x: n.eval(new double[]{0,1})) {
+            System.out.println(x);
+        }
+        for(double x: n.eval(new double[]{1,0})) {
+            System.out.println(x);
+        }
+        for(double x: n.eval(new double[]{1,1})) {
+            System.out.println(x);
+        }
     }
 
 }
