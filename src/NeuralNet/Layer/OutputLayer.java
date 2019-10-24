@@ -68,6 +68,8 @@ public class OutputLayer extends Layer{
             weights[startNode][stopNode] = w;
             return;
         }
+        System.err.println(Error.NEURON_NOT_EXISTS_IN_LAYER);
+        System.exit(Error.NEURON_NOT_EXISTS_IN_LAYER.ordinal());
         System.out.println("ERROR!!!!");
     }
 }

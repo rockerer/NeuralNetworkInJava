@@ -12,7 +12,8 @@ class NNMain {
 //        testNN1();
 //        testNN2();
 //        testNN4();
-        testNNXORReLu();
+//        testNNXORReLu();
+        testNNXORSig();
     }
 
     private static void testNN0() {
@@ -177,6 +178,8 @@ class NNMain {
         n.addInputLayer(2);
         n.addHiddenLayer(new ActivationfunctionReLu(), 2);
         n.addOutputLayer(new ActivationfunctionReLu(), 1);
+//        n.addHiddenLayer(new ActivationfunctionSigmoid(), 2);
+//        n.addOutputLayer(new ActivationfunctionSigmoid(), 1);
 
         n.setWeightsHidden(0, 0, 0, 1);
         n.setWeightsHidden(0, 0, 1, -1);
@@ -185,6 +188,40 @@ class NNMain {
 
         n.setWeightOutp(0, 0, 1);
         n.setWeightOutp(1, 0, 1);
+
+
+        for(double x: n.eval(new double[]{0,0})) {
+            System.out.println(x);
+        }
+        for(double x: n.eval(new double[]{0,1})) {
+            System.out.println(x);
+        }
+        for(double x: n.eval(new double[]{1,0})) {
+            System.out.println(x);
+        }
+        for(double x: n.eval(new double[]{1,1})) {
+            System.out.println(x);
+        }
+    }
+
+    public static void testNNXORSig() {
+        NeuralNet n = new NeuralNet();
+        n.addInputLayer(2);
+        n.addHiddenLayer(new ActivationfunctionSigmoid(), 2);
+        n.addOutputLayer(new ActivationfunctionSigmoid(), 1);
+
+        n.setWeightsHidden(0, 0, 0, 5);
+        n.setWeightsHidden(0, 0, 1, -5);
+        n.setWeightsHidden(0, 1, 0, -5);
+        n.setWeightsHidden(0, 1, 1, 5);
+        // bias
+        n.setWeightsHidden(0, 2, 0, -3);
+        n.setWeightsHidden(0, 2, 1, -2);
+
+        n.setWeightOutp(0, 0, 10);
+        n.setWeightOutp(1, 0, 10);
+        // bias
+        n.setWeightOutp(2, 0,-5);
 
 
         for(double x: n.eval(new double[]{0,0})) {
